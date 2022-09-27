@@ -6,24 +6,26 @@
         [TestMethod]
         public void TestMultiplication()
         {
-            Dollor five = new Dollor(5);
-            five.Times(2);
-            Assert.AreEqual(10, five.amount);
+            Dollar five = new Dollar(5);
+            Dollar product = five.Times(2);
+            Assert.AreEqual(10, product.amount);
+            product = five.Times(3);
+            Assert.AreEqual(15, product.amount);
         }
     }
 
-    class Dollor
+    class Dollar
     {
         public int amount;
 
-        public Dollor(int amount)
+        public Dollar(int amount)
         {
             this.amount = amount;
         }
 
-        public void Times(int multiplier)
+        public Dollar Times(int multiplier)
         {
-            amount *= multiplier;
+            return new Dollar(amount * multiplier);
         }
     }
 }
