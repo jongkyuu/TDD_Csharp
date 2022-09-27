@@ -7,23 +7,21 @@
         public void TestMultiplication()
         {
             Dollar five = new Dollar(5);
-            Dollar product = five.Times(2);
-            Assert.AreEqual(10, product.amount);
-            product = five.Times(3);
-            Assert.AreEqual(15, product.amount);
+            Assert.AreEqual(new Dollar(10), five.Times(2));
+            Assert.AreEqual(new Dollar(15), five.Times(3));
         }
 
         [TestMethod]
         public void TestEquality()
         {
-            Assert.IsTrue(new Dollar(5).equals(new Dollar(5)));
-            Assert.IsFalse(new Dollar(5).equals(new Dollar(6)));
+            Assert.IsTrue(new Dollar(5).Equals(new Dollar(5)));
+            Assert.IsFalse(new Dollar(5).Equals(new Dollar(6)));
         }
     }
 
     class Dollar
     {
-        public int amount;
+        private int amount;
 
         public Dollar(int amount)
         {
@@ -35,10 +33,17 @@
             return new Dollar(amount * multiplier);
         }
 
-        public bool equals(object @object)
+        public override bool Equals(object obj)
         {
-            Dollar dollar = (Dollar)@object;
-            return amount == dollar.amount;
+            if (obj == null || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Dollar dollar = (Dollar)obj;
+                return amount == dollar.amount;
+            }
         }
     }
 }
