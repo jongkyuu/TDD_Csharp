@@ -16,6 +16,8 @@
         {
             Assert.IsTrue(new Dollar(5).Equals(new Dollar(5)));
             Assert.IsFalse(new Dollar(5).Equals(new Dollar(6)));
+            Assert.IsTrue(new Franc(5).Equals(new Franc(5)));
+            Assert.IsFalse(new Franc(5).Equals(new Franc(6)));
         }
 
         [TestMethod]
@@ -27,10 +29,24 @@
         }
     }
 
-    class Dollar
+    class Money
     {
-        private int amount;
+        internal int amount;
 
+        public override bool Equals(object obj)
+        {
+            //if (obj == null || !this.GetType().Equals(obj.GetType()))
+            //{
+            //    return false;
+            //}
+
+            Money money = (Money)obj;
+            return amount == money.amount;
+        }
+    }
+
+    class Dollar : Money
+    {
         public Dollar(int amount)
         {
             this.amount = amount;
@@ -40,26 +56,11 @@
         {
             return new Dollar(amount * multiplier);
         }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                Dollar dollar = (Dollar)obj;
-                return amount == dollar.amount;
-            }
-        }
     }
 
 
-    class Franc
+    class Franc : Money
     {
-        private int amount;
-
         public Franc(int amount)
         {
             this.amount = amount;
@@ -68,19 +69,6 @@
         public Franc Times(int multiplier)
         {
             return new Franc(amount * multiplier);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null || !this.GetType().Equals(obj.GetType()))
-            {
-                return false;
-            }
-            else
-            {
-                Franc franc = (Franc)obj;
-                return amount == franc.amount;
-            }
         }
     }
 }
