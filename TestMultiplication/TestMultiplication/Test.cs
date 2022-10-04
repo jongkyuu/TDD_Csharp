@@ -6,44 +6,63 @@
         [TestMethod]
         public void TestMultiplication()
         {
-            Money five = Money.dollar(5); // Factory Method 도입
-            Assert.AreEqual(Money.dollar(10), five.Times(2));
-            Assert.AreEqual(Money.dollar(15), five.Times(3));
+            Money five = Money.Dollar(5); // Factory Method 도입
+            Assert.AreEqual(Money.Dollar(10), five.Times(2));
+            Assert.AreEqual(Money.Dollar(15), five.Times(3));
         }
 
         [TestMethod]
         public void TestEquality()
         {
-            Assert.IsTrue(Money.dollar(5).Equals(Money.dollar(5)));
-            Assert.IsFalse(Money.dollar(5).Equals(Money.dollar(6)));
-            Assert.IsTrue(Money.franc(5).Equals(Money.franc(5)));
-            Assert.IsFalse(Money.franc(5).Equals(Money.franc(6)));
-            Assert.IsFalse(Money.franc(5).Equals(Money.dollar(5)));
+            Assert.IsTrue(Money.Dollar(5).Equals(Money.Dollar(5)));
+            Assert.IsFalse(Money.Dollar(5).Equals(Money.Dollar(6)));
+            Assert.IsTrue(Money.Franc(5).Equals(Money.Franc(5)));
+            Assert.IsFalse(Money.Franc(5).Equals(Money.Franc(6)));
+            Assert.IsFalse(Money.Franc(5).Equals(Money.Dollar(5)));
         }
 
         [TestMethod]
-        public void TestFrancMultiplication()
+        public void TestFrancMultiplication()   
         {
-            Money five = Money.franc(5);
-            Assert.AreEqual(Money.franc(10), five.Times(2));
-            Assert.AreEqual(Money.franc(15), five.Times(3));
+            Money five = Money.Franc(5);
+            Assert.AreEqual(Money.Franc(10), five.Times(2));
+            Assert.AreEqual(Money.Franc(15), five.Times(3));
+        }
+
+        [TestMethod]
+        public void TestCurrency()
+        {
+            Assert.AreEqual("USD", Money.Dollar(1).Currency());
+            Assert.AreEqual("CHF", Money.Franc(1).Currency());
         }
     }
 
     abstract class Money
     {
-        internal int amount;
+        internal int _amount;
+        internal string _currency;
+
+        public Money(int amount, string currency)
+        {
+            _amount = amount;
+            _currency = currency;
+        }
+
+        public string Currency()
+        {
+            return _currency;
+        }
 
         public abstract Money Times(int multiplier);
 
-        public static Dollar dollar(int amount)
+        public static Money Dollar(int amount)
         {
-            return new Dollar(amount);
+            return new Dollar(amount, "USD");
         }
 
-        public static Money franc(int amount)
+        public static Money Franc(int amount)
         {
-            return new Franc(amount);
+            return new Franc(amount, "CHF");
         }
 
         public override bool Equals(object obj)
@@ -54,34 +73,33 @@
             //}
 
             Money money = (Money)obj;
-            return amount == money.amount && GetType().Equals(money.GetType());
+            return _amount == money._amount && GetType().Equals(money.GetType());
         }
     }
 
     class Dollar : Money
     {
-        public Dollar(int amount)
+        public Dollar(int amount, string currency) : base(amount, currency)
         {
-            this.amount = amount;
         }
+
 
         public override Money Times(int multiplier)
         {
-            return new Dollar(amount * multiplier);
+            return Money.Dollar(_amount * multiplier);
         }
     }
 
 
     class Franc : Money
     {
-        public Franc(int amount)
+        public Franc(int amount, string currency) : base(amount, currency)
         {
-            this.amount = amount;
         }
 
         public override Money Times(int multiplier)
         {
-            return new Franc(amount * multiplier);
+            return Money.Franc(_amount * multiplier);
         }
     }
 }
