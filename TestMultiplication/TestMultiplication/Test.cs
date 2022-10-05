@@ -35,9 +35,15 @@
             Assert.AreEqual("USD", Money.Dollar(1).Currency());
             Assert.AreEqual("CHF", Money.Franc(1).Currency());
         }
+
+        [TestMethod]
+        public void TestDifferentClassEquality()
+        {
+            Assert.IsTrue(new Money(10, "CHF").Equals(new Franc(10, "CHF")));
+        }
     }
 
-    abstract class Money
+    class Money
     {
         internal int _amount;
         internal string _currency;
@@ -53,7 +59,12 @@
             return _currency;
         }
 
-        public abstract Money Times(int multiplier);
+        //public abstract Money Times(int multiplier);
+        public Money Times(int multiplier)
+        {
+            return new Money(_amount * multiplier, _currency);
+        }
+
 
         public static Money Dollar(int amount)
         {
@@ -73,7 +84,7 @@
             //}
 
             Money money = (Money)obj;
-            return _amount == money._amount && GetType().Equals(money.GetType());
+            return _amount == money._amount && Currency().Equals(money.Currency());
         }
     }
 
@@ -84,10 +95,11 @@
         }
 
 
-        public override Money Times(int multiplier)
-        {
-            return Money.Dollar(_amount * multiplier);
-        }
+        //public Money Times(int multiplier)
+        //{
+        //    //return Money.Dollar(_amount * multiplier);
+        //    return new Money(_amount * multiplier, _currency);
+        //}
     }
 
 
@@ -97,9 +109,10 @@
         {
         }
 
-        public override Money Times(int multiplier)
-        {
-            return Money.Franc(_amount * multiplier);
-        }
+        //public Money Times(int multiplier)
+        //{
+        //    //return Money.Franc(_amount * multiplier);
+        //    return new Money(_amount * multiplier, _currency);
+        //}
     }
 }
